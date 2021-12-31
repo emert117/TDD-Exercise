@@ -106,5 +106,19 @@ namespace TddKata.Tests
             var expected = 6;
             Assert.AreEqual(expected, _stringCalculator.Add("//[***]\n1***2***3"));
         }
+
+        [Test]
+        public void Can_handle_multiple_delimeters()
+        {
+            var expected = 6;
+            Assert.AreEqual(expected, _stringCalculator.Add("//[*][%]\n1*2%3"));
+        }
+
+        [Test]
+        public void Can_handle_multiple_delimeters_with_longer_than_one_char()
+        {
+            var expected = 6;
+            Assert.AreEqual(expected, _stringCalculator.Add("//[**][%%]\n1**2%%3"));
+        }
     }
 }

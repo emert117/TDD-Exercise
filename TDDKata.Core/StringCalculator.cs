@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace TDDKata.Core
@@ -20,19 +21,46 @@ namespace TDDKata.Core
             if (String.IsNullOrEmpty(input))
                 return 0;
 
-            var delimeter = ",";
+            var delimiter = ",";
             var differentDelimeterSign = "//";
-            if (!input.Contains(delimeter) && !input.StartsWith(differentDelimeterSign))
+            if (!input.Contains(delimiter) && !input.StartsWith(differentDelimeterSign))
                 return int.Parse(input);
 
-            if (input.StartsWith(differentDelimeterSign))
+            var newLine = "\n";
+            var longDelimeterSign = "//[";
+            List<string> numbers = new List<string>();
+
+            if (input.StartsWith(longDelimeterSign))
             {
-                var newLine = "\n";
-                delimeter = input.Substring(differentDelimeterSign.Length, input.IndexOf(newLine) - differentDelimeterSign.Length);
-                input = input.Remove(0, differentDelimeterSign.Length + newLine.Length + delimeter.Length);
+                var multipleDelimeterSign = "][";
+                if (input.Contains(multipleDelimeterSign))
+                {
+                    var firstDelimeter = input.Substring(longDelimeterSign.Length, input.IndexOf(multipleDelimeterSign) - longDelimeterSign.Length);
+                    var secondDelimiter = input.Substring(input.IndexOf(multipleDelimeterSign) + multipleDelimeterSign.Length, input.IndexOf(newLine) - input.IndexOf(multipleDelimeterSign) - multipleDelimeterSign.Length - 1);
+                    input = input.Remove(0, input.IndexOf(newLine) + newLine.Length);
+                    var numbersWithFirstDelimiter = input.Split(firstDelimeter).Where(x => int.TryParse(x, out _));
+                    numbers.AddRange(numbersWithFirstDelimiter);
+                    input = input.Remove(0, input.LastIndexOf(firstDelimeter) + firstDelimeter.Length);
+                    var numbersWithSecondDelimiter = input.Split(secondDelimiter).Where(x => int.TryParse(x, out _));
+                    numbers.AddRange(numbersWithSecondDelimiter);
+                }
+                else
+                {
+                    delimiter = input.Substring(longDelimeterSign.Length, input.IndexOf(newLine) - longDelimeterSign.Length - newLine.Length);
+                    input = input.Remove(0, longDelimeterSign.Length + newLine.Length + delimiter.Length + 1);
+                }
+            }
+            else if (input.StartsWith(differentDelimeterSign))
+            {
+                delimiter = input.Substring(differentDelimeterSign.Length, input.IndexOf(newLine) - differentDelimeterSign.Length);
+                input = input.Remove(0, differentDelimeterSign.Length + newLine.Length + delimiter.Length);
             }
 
-            var numbers = input.Split(delimeter);
+            if (!numbers.Any())
+            {
+                numbers = input.Split(delimiter).ToList();
+            }
+
             var integers = numbers.Select(x => int.Parse(x));
             var negatives = integers.Where(x => x < 0);
             if (negatives.Any())
