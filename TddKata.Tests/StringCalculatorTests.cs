@@ -50,7 +50,7 @@ namespace TddKata.Tests
         }
 
         [Test]
-        public void Can_support_different_delimeters_in_input()
+        public void Can_support_different_delimiters_in_input()
         {
             var expected = 7;
             Assert.AreEqual(expected, _stringCalculator.Add("//;\n3;4"));
@@ -101,21 +101,21 @@ namespace TddKata.Tests
         }
 
         [Test]
-        public void Can_handle_delimeters_wtih_any_lenght()
+        public void Can_handle_delimiters_with_any_length()
         {
             var expected = 6;
             Assert.AreEqual(expected, _stringCalculator.Add("//[***]\n1***2***3"));
         }
 
         [Test]
-        public void Can_handle_multiple_delimeters()
+        public void Can_handle_multiple_delimiters()
         {
             var expected = 6;
             Assert.AreEqual(expected, _stringCalculator.Add("//[*][%]\n1*2%3"));
         }
 
         [Test]
-        public void Can_handle_multiple_delimeters_with_longer_than_one_char()
+        public void Can_handle_multiple_delimiters_with_longer_than_one_char()
         {
             var expected = 6;
             Assert.AreEqual(expected, _stringCalculator.Add("//[**][%%]\n1**2%%3"));
